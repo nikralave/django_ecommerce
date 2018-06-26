@@ -1,0 +1,16 @@
+
+#run {
+    display: block;
+    width: 1000px;
+    height:800px;
+    padding: 20px;
+    box-sizing: border-box;
+    font: 700 25em helvetica;
+    letter-spacing: -.05em;
+
+    /* image */
+    background: url("https://images.unsplash.com/photo-1511556532299-8f662fc26c06?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=54f71b2a6ea14e8a75ba125215dc02ce&auto=format&fit=crop&w=1050&q=80") no-repeat;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
