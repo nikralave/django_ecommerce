@@ -1,33 +1,39 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from products.models import Product
 from .forms import OrderForm, MakePaymentForm
+from .models import OrderLineItem
+from cart.utils import get_cart_items_and_total
+from django.conf import settings
 
 # Create your views here.
 def checkout(request):
     
     if request.method=="POST":
         order_form = OrderForm(request.POST)
-        if form.is_valid():
-            order_form.save()
-            return HttpResponse("I mad an Order, it's in the DB, go have a look")
+        if order_form.is_valid():
+            order = order_form.save()
+            
+            cart = request.session.get('cart', {})
+            for product_id, quantity in cart.items():
+                line_item = OrderLineItem()
+                line_item.order = order
+                product = get_object_or_404(Product, pk=product_id)
+                line_item.product = product 
+                line_item.quantity = quantity
+                line_item.save()
+                
+            #clear the cart
+            del request.session['cart']
+        
+        return HttpResponse("I mad an Order, it's in the DB, go have a look")
     
     else: 
         cart=request.session.get('cart', {})
-        
-        cart_total = 0
-        cart_items = []
-        for key in cart:
-            trainer = get_object_or_404(Product, pk=key)
-            
-            cart_item = {
-                'product':trainer,
-                'quantity':cart[key],
-                'total': (trainer.price * cart[key])
-            }
-            cart_items.append(cart_item)
-            cart_total += cart_item['total']
+        context = get_cart_items_and_total(cart)
             
         order_form = OrderForm()
         payment_form = MakePaymentForm()
-    
-        return render(request, "checkout/checkout.html", {'cart_items':cart_items, 'total':cart_total, 'order_form':order_form, 'payment_form':payment_form})
+        forms = {'order_form': order_form, 'payment_form': payment_form, 'publishable': settings.STRIPE_PUBLISHABLE}
+        
+        context.update(forms)
+        return render(request, "checkout/checkout.html", context)

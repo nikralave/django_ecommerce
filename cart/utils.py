@@ -3,21 +3,21 @@ from products.models import Product
 from decimal import Decimal
 
 def get_cart_items_and_total(cart):
+    cart_total = 0
+    # cart_items is passing the list of products to the html if we use cart_items in html to do it 
     cart_items = []
-    total = 0
-    for item_id, item_quantity in cart.items():
-        this_product = get_object_or_404(Product, pk=item_id)
-        this_total = this_product.price * Decimal(item_quantity)
-        total += this_total
-        this_item = {
-            'product_id': item_id, 
-            'image': this_product.image,
-            'name': this_product.name,
-            'quantity': item_quantity,
-            'price': this_product.price,
-            'total': this_total,
+    for key in cart:
+        trainer = get_object_or_404(Product, pk=key)
+        
+        cart_item = {
+            'product':trainer,
+            'quantity':cart[key],
+            'total': (trainer.price * cart[key])
         }
-        cart_items.append(this_item)
+        cart_items.append(cart_item)
+        
+        cart_total += cart_item['total']
+    
 
-    return { 'cart_items': cart_items, 'total': total }
+    return { 'cart_items': cart_items, 'total': cart_total }
     
