@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product
-from django.http import HttpResponse
 from.utils import get_cart_items_and_total
 
 # Create your views here.
@@ -26,7 +25,7 @@ def add_to_cart(request):
     #Save the cart back to the session
     request.session['cart'] = cart
     
-    return redirect('view_cart')
+    return redirect('get_products')
     
 def remove_from_cart(request):
     id = request.POST['product_id']

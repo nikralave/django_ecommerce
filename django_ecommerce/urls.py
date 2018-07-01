@@ -29,7 +29,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include(accounts_urls)),
-    path('', get_index),
+    path('', get_index, name='home'),
     path('products/', include(products_urls)),
     path('cart/', include(cart_urls)),
     path('checkout/', include(checkout_urls)),
