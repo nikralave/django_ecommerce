@@ -33,5 +33,5 @@ urlpatterns = [
     path('products/', include(products_urls)),
     path('cart/', include(cart_urls)),
     path('checkout/', include(checkout_urls)),
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
